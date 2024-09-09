@@ -1,0 +1,83 @@
+﻿@model IndexViewModel
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Index</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Bienvenido, @Model.Usuario</h1>
+        <br />
+        <h2>Agregar Nuevo Tour</h2>
+        <form asp-action="AgregarTour" method="post">
+            <div class="form-group">
+                <label for="Nombre">Nombre del Tour</label>
+                <input type="text" class="form-control" id="Nombre" name="Nombre" required />
+            </div>
+            <div class="form-group">
+                <label for="Destino">Destino</label>
+                <input type="text" class="form-control" id="Destino" name="Destino" required />
+            </div>
+            <div class="form-group">
+                <label for="FechaInicio">Fecha de inicio</label>
+                <input type="date" class="form-control" id="FechaInicio" name="FechaInicio" required />
+            </div>
+            <div class="form-group">
+                <label for="FechaFin">Fecha de fin</label>
+                <input type="date" class="form-control" id="FechaFin" name="FechaFin" required />
+            </div>
+            <div class="form-group">
+                <label for="Precio">Precio</label>
+                <input type="number" class="form-control" id="Precio" name="Precio" required />
+            </div>
+            <button type="submit" class="btn btn-success">Agregar Tour</button>
+        </form>
+        <br />
+        <h2>Tours Disponibles</h2>
+        <br />
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Nombre del Tour</th>
+                    <th>Destino</th>
+                    <th>Fecha de inicio</th>
+                    <th>Fecha de fin</th>
+                    <th>Precio</th>
+                    <th>Reservas</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var tour in Model.Tours)
+                {
+                    <tr>
+                        <td>@tour.Nombre</td>
+                        <td>@tour.Destino</td>
+                        <td>@tour.FechaInicio</td>
+                        <td>@tour.FechaFin</td>
+                        <td>@tour.Precio</td>
+                        <td>@tour.Reservas.Count</td>
+                        <td>
+                            <form asp-action="ReservarTour" method="post" style="display:inline;">
+                                <input type="hidden" name="tourId" value="@tour.Id" />
+                                <button type="submit" class="btn btn-primary">Reservar</button>
+                            </form>
+                            @if (tour.TieneReservas)
+                            {
+                                <form asp-action="EliminarReserva" method="post" style="display:inline;">
+                                    <input type="hidden" name="reservaId" value="@tour.Reservas.First().Id" />
+                                    <button type="submit" class="btn btn-danger">Eliminar Reserva</button>
+                                </form>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
